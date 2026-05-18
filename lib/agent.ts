@@ -1,31 +1,32 @@
-import {
-  jsonSchema,
-  ToolLoopAgent,
-  tool,
-  type ModelMessage,
-} from "ai";
+import { ToolLoopAgent, type ModelMessage } from "ai";
+import { itineraryTools } from "./tools/itinerary-tools";
+
+const MODEL = "openai/gpt-5.4-mini";
 
 const agent = new ToolLoopAgent({
-  model: 'openai/gpt-5.4-mini',
+  id: "itinerary-planner-orchestrator",
+  model: MODEL,
   instructions:
-    "You are a helpful, concise assistant for the ClickHouse Open House Conference demo.",
-  tools: {
-    getCurrentTime: tool({
-      description: "Get the current server time as an ISO timestamp.",
-      inputSchema: jsonSchema({
-        type: "object",
-        properties: {},
-        additionalProperties: false,
-      }),
-      execute: async () => ({
-        now: new Date().toISOString(),
-      }),
-    }),
+    "You are an itinerary-planning orchestrator for the ClickHouse Open House Conference demo. Help users plan trips with practical, concise recommendations. Use the specialist tools to research destinations, draft day plans, estimate budgets, and check logistics before presenting an itinerary. Ask a brief clarifying question only when a missing detail would materially change the plan.",
+  tools: itineraryTools,
+  include: {
+    responseBody: true,
   },
 });
 
 export function streamAgentResponse(messages: ModelMessage[]) {
   return agent.stream({
     messages,
+    onFinish: ({ steps }) => {
+      console.dir(
+        steps.map((step) => ({
+          stepNumber: step.stepNumber,
+          response: step.response,
+          toolCalls: step.toolCalls,
+          toolResults: step.toolResults,
+        })),
+        { depth: null },
+      );
+    },
   });
 }
