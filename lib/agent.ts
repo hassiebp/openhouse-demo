@@ -14,12 +14,17 @@ const agent = new ToolLoopAgent({
   },
 });
 
-export function streamAgentResponse(messages: ModelMessage[]) {
+type AgentOnFinish = Parameters<typeof agent.stream>[0]["onFinish"];
+
+export function streamAgentResponse(
+  messages: ModelMessage[],
+  onFinish?: AgentOnFinish,
+) {
   return agent.stream({
     messages,
-    onFinish: ({ steps }) => {
+    onFinish: (event) => {
       console.dir(
-        steps.map((step) => ({
+        event.steps.map((step) => ({
           stepNumber: step.stepNumber,
           response: step.response,
           toolCalls: step.toolCalls,
@@ -27,6 +32,7 @@ export function streamAgentResponse(messages: ModelMessage[]) {
         })),
         { depth: null },
       );
+      onFinish?.(event);
     },
   });
 }

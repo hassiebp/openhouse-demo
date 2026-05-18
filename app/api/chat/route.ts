@@ -1,11 +1,60 @@
 import { streamAgentResponse } from "@/lib/agent";
 import { convertToModelMessages, type UIMessage } from "ai";
+import { after } from "next/server";
+import { trace } from "@opentelemetry/api";
+import {
+  observe,
+  propagateAttributes,
+  setActiveTraceIO,
+} from "@langfuse/tracing";
+import { langfuseSpanProcessor } from "@/instrumentation";
 
 export const maxDuration = 30;
+export const runtime = "nodejs";
 
-export async function POST(request: Request) {
-  const { messages }: { messages: UIMessage[] } = await request.json();
-  const result = await streamAgentResponse(await convertToModelMessages(messages));
-
-  return result.toUIMessageStreamResponse();
+function getLatestUserText(messages: UIMessage[]) {
+  return messages
+    .at(-1)
+    ?.parts.map((part) => (part.type === "text" ? part.text : ""))
+    .join(" ")
+    .trim();
 }
+
+async function handler(request: Request) {
+  const { messages }: { messages: UIMessage[] } = await request.json();
+
+  setActiveTraceIO({
+    input: getLatestUserText(messages),
+  });
+
+  return propagateAttributes(
+    {
+      traceName: "chat-message",
+      metadata: {
+        messageCount: String(messages.length),
+      },
+    },
+    async () => {
+      const result = await streamAgentResponse(
+        await convertToModelMessages(messages),
+        (event) => {
+          setActiveTraceIO({
+            output: event.text,
+          });
+          trace.getActiveSpan()?.end();
+        },
+      );
+
+      after(async () => {
+        await langfuseSpanProcessor.forceFlush();
+      });
+
+      return result.toUIMessageStreamResponse();
+    },
+  );
+}
+
+export const POST = observe(handler, {
+  name: "handle-chat-message",
+  endOnExit: false,
+});
