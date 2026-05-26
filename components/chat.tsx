@@ -373,12 +373,12 @@ function ChatThread({
   }
 
   function dismissWelcome() {
-    setWelcomeState((current) =>
-      current === "visible" ? "exiting" : current,
-    );
+    setWelcomeState((current) => (current === "visible" ? "exiting" : current));
   }
 
-  function handleWelcomeAnimationEnd(event: AnimationEvent<HTMLHeadingElement>) {
+  function handleWelcomeAnimationEnd(
+    event: AnimationEvent<HTMLHeadingElement>,
+  ) {
     if (event.animationName !== "welcomeOut" || welcomeState !== "exiting") {
       return;
     }
@@ -444,6 +444,16 @@ function ChatThread({
           {isBusy ? "Thinking" : "Send"}
         </button>
       </form>
+      <div className={styles.tracesFooter}>
+        <a
+          className={styles.tracesLink}
+          href="https://cloud.langfuse.com/project/clkpwwm0m000gmm094odg11gi/traces?filter=traceName%3BstringOptions%3B%3Bany+of%3BOpenHouse-Itinerary-Agent"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View traces in Langfuse →
+        </a>
+      </div>
     </section>
   );
 }

@@ -256,6 +256,29 @@
   padding: 12px 18px;
 }
 
+.tracesFooter {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 16px;
+}
+
+.tracesLink {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.tracesLink:hover,
+.tracesLink:focus-visible {
+  color: var(--foreground);
+  border-bottom-color: var(--foreground);
+  outline: none;
+}
+
 @media (max-width: 640px) {
   .workspace {
     min-height: calc(100vh - 24px);
