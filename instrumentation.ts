@@ -4,12 +4,19 @@ import { LangfuseSpanProcessor } from "@langfuse/otel";
 import { LangfuseVercelAiSdkIntegration } from "@langfuse/vercel-ai-sdk";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 
+let telemetryRegistered = false;
 export const langfuseSpanProcessor = new LangfuseSpanProcessor();
 
-const tracerProvider = new NodeTracerProvider({
-  spanProcessors: [langfuseSpanProcessor],
-});
+export function register() {
+  if (telemetryRegistered) return;
 
-tracerProvider.register();
+  const tracerProvider = new NodeTracerProvider({
+    spanProcessors: [langfuseSpanProcessor],
+  });
 
-registerTelemetry(new LangfuseVercelAiSdkIntegration());
+  tracerProvider.register();
+
+  registerTelemetry(new LangfuseVercelAiSdkIntegration());
+
+  telemetryRegistered = true;
+}
