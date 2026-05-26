@@ -6,8 +6,9 @@ import type {
   DestinationResearchInput,
   LogisticsInput,
 } from "./types";
+import { openai } from "@ai-sdk/openai";
 
-const MODEL = "openai/gpt-5.4-mini";
+const MODEL = openai("gpt-5.4-mini");
 
 export async function researchDestination({
   destination,
@@ -82,7 +83,9 @@ export async function buildDayPlan({
       travelerPreferences
         ? `Traveler preferences: ${travelerPreferences}`
         : "Traveler preferences: not specified",
-      destinationResearch ? `Destination research:\n${destinationResearch}` : "",
+      destinationResearch
+        ? `Destination research:\n${destinationResearch}`
+        : "",
       "Return a concise day-by-day plan with morning, afternoon, evening, food ideas, and optional swaps.",
     ].join("\n"),
     maxOutputTokens: 900,

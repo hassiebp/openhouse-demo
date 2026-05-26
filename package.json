@@ -9,13 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ai-sdk/otel": "1.0.0-canary.88",
+    "@ai-sdk/openai": "^3.0.65",
     "@ai-sdk/react": "4.0.0-canary.143",
-    "@langfuse/otel": "^5.3.0",
-    "@langfuse/tracing": "^5.3.0",
+    "@langfuse/otel": "^5.4.0-beta.1",
+    "@langfuse/tracing": "5.4.0-beta.1",
+    "@langfuse/vercel-ai-sdk": "5.4.0-beta.1",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/sdk-trace-node": "^2.7.1",
-    "ai": "7.0.0-canary.142",
+    "ai": "7.0.0-canary.152",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",

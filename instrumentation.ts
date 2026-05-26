@@ -1,5 +1,5 @@
 import { registerTelemetry } from "ai";
-import { OpenTelemetry } from "@ai-sdk/otel";
+import { LangfuseVercelAiSdkIntegration } from "@langfuse/vercel-ai-sdk";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
 import { NodeTracerProvider } from "@opentelemetry/sdk-trace-node";
 
@@ -18,7 +18,7 @@ export function register() {
   tracerProvider.register();
 
   if (!telemetryRegistered) {
-    registerTelemetry(new OpenTelemetry());
+    registerTelemetry(new LangfuseVercelAiSdkIntegration());
     telemetryRegistered = true;
   }
 }

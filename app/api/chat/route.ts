@@ -29,7 +29,7 @@ async function handler(request: Request) {
 
   return propagateAttributes(
     {
-      traceName: "chat-message",
+      traceName: "OpenHouse-Itinerary-Agent",
       metadata: {
         messageCount: String(messages.length),
       },
@@ -55,6 +55,6 @@ async function handler(request: Request) {
 }
 
 export const POST = observe(handler, {
-  name: "handle-chat-message",
+  name: "OpenHouse-Itinerary-Agent",
   endOnExit: false,
 });
