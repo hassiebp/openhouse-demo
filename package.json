@@ -9,8 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^3.0.65",
-    "@ai-sdk/react": "4.0.0-canary.143",
+    "@ai-sdk/openai": "4.0.0-canary.63",
+    "@ai-sdk/react": "4.0.0-canary.154",
     "@langfuse/otel": "^5.4.0-beta.1",
     "@langfuse/tracing": "5.4.0-beta.1",
     "@langfuse/vercel-ai-sdk": "5.4.0-beta.1",
