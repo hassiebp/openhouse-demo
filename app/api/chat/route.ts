@@ -1,11 +1,13 @@
 import { streamAgentResponse } from "@/lib/agent";
 import { convertToModelMessages, type UIMessage } from "ai";
+import { after } from "next/server";
 import { trace } from "@opentelemetry/api";
 import {
   observe,
   propagateAttributes,
   setActiveTraceIO,
 } from "@langfuse/tracing";
+import { langfuseSpanProcessor } from "@/instrumentation";
 
 export const maxDuration = 30;
 export const runtime = "nodejs";
@@ -42,6 +44,10 @@ async function handler(request: Request) {
           trace.getActiveSpan()?.end();
         },
       );
+
+      after(async () => {
+        await langfuseSpanProcessor.forceFlush();
+      });
 
       return result.toUIMessageStreamResponse();
     },

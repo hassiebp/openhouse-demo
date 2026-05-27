@@ -4,10 +4,12 @@ import { registerOTel } from "@vercel/otel";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
 import { LangfuseVercelAiSdkIntegration } from "@langfuse/vercel-ai-sdk";
 
+export const langfuseSpanProcessor = new LangfuseSpanProcessor();
+
 export function register() {
   registerOTel({
     serviceName: "your-project-name",
-    spanProcessors: [new LangfuseSpanProcessor()],
+    spanProcessors: [langfuseSpanProcessor],
   });
 
   registerTelemetry(new LangfuseVercelAiSdkIntegration());
