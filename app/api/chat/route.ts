@@ -46,8 +46,6 @@ async function handler(request: Request) {
       );
 
       after(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
         await langfuseSpanProcessor.forceFlush();
       });
 
