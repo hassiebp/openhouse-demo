@@ -433,7 +433,10 @@ function ChatThread({
       <form className={styles.form} onSubmit={handleSubmit}>
         <textarea
           aria-label="Message"
+          autoCapitalize="sentences"
+          autoComplete="off"
           disabled={isBusy}
+          enterKeyHint="send"
           onKeyDown={handleKeyDown}
           onChange={(event) => setInput(event.target.value)}
           placeholder="Message the assistant..."
