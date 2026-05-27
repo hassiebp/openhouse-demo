@@ -411,7 +411,7 @@ function ChatThread({
             }`}
             onAnimationEnd={handleWelcomeAnimationEnd}
           >
-            Welcome to the Open House 2026 Conference.
+            Ask me about your next trip.
           </h1>
         ) : null}
 
