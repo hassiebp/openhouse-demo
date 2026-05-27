@@ -1,8 +1,7 @@
 import { ToolLoopAgent, type ModelMessage } from "ai";
 import { itineraryTools } from "./tools/itinerary-tools";
-import { openai } from "@ai-sdk/openai";
 
-const MODEL = openai("gpt-5.4-mini");
+const MODEL = "openai/gpt-5.4-mini";
 
 const agent = new ToolLoopAgent({
   id: "itinerary-planner-orchestrator",

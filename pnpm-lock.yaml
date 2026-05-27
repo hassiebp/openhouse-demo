@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@ai-sdk/openai':
-        specifier: 4.0.0-canary.63
-        version: 4.0.0-canary.63(zod@4.4.3)
       '@ai-sdk/react':
         specifier: 4.0.0-canary.154
         version: 4.0.0-canary.154(react@19.2.4)(zod@4.4.3)
@@ -77,12 +74,6 @@ packages:
 
   '@ai-sdk/mcp@2.0.0-canary.53':
     resolution: {integrity: sha512-N5NISbBeTkRf/YBAf4NSxylbFHpwIioKdlgHXAlyE1ZOFPdzpWtXTJUvyJZ7gROEbGR8oZjN/XjFg469AbWSEw==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4.1.8
-
-  '@ai-sdk/openai@4.0.0-canary.63':
-    resolution: {integrity: sha512-oGcqdMsV0G8mpV1LrdsRDm/fwfCUzTQL0t/Ay5vkuo8Apb7LFsZJfXFqx+P8tf1RZHqMzBj5IxZuXfQCZLdkfQ==}
     engines: {node: '>=22'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -2014,12 +2005,6 @@ snapshots:
       '@ai-sdk/provider': 4.0.0-canary.17
       '@ai-sdk/provider-utils': 5.0.0-canary.43(zod@4.4.3)
       pkce-challenge: 5.0.1
-      zod: 4.4.3
-
-  '@ai-sdk/openai@4.0.0-canary.63(zod@4.4.3)':
-    dependencies:
-      '@ai-sdk/provider': 4.0.0-canary.17
-      '@ai-sdk/provider-utils': 5.0.0-canary.43(zod@4.4.3)
       zod: 4.4.3
 
   '@ai-sdk/otel@1.0.0-canary.98(zod@4.4.3)':

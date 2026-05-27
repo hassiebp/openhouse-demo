@@ -8,7 +8,7 @@ export const langfuseSpanProcessor = new LangfuseSpanProcessor();
 
 export function register() {
   registerOTel({
-    serviceName: "your-project-name",
+    serviceName: "openhouse-itinerary-agent",
     spanProcessors: [langfuseSpanProcessor],
   });
 
