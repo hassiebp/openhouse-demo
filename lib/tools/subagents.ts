@@ -8,6 +8,7 @@ import type {
 } from "./types";
 
 const MODEL = "openai/gpt-5.4-mini";
+// const MODEL = "anthropic/claude-sonnet-4.5";
 
 export async function researchDestination({
   destination,

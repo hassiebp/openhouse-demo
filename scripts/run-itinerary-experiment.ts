@@ -17,8 +17,6 @@ type ItineraryExpectations = {
   mustAvoid: string[];
 };
 
-const EXPERIMENT_NAME = "openhouse-itinerary-agent-demo";
-
 const itineraryTask: ExperimentTask<string, ItineraryExpectations> = async ({
   input,
 }) => {
@@ -36,6 +34,23 @@ const feasibilityAndPacingEvaluator: Evaluator<
   string,
   ItineraryExpectations
 > = async ({ input, output, expectedOutput }) => {
+  const prompt = `Score this itinerary from 0 to 1 for feasibility and pacing.
+      Judge only whether the plan is realistic, appropriately paced, and respects the user's constraints.
+      Penalize overpacked schedules, implausible routing, missed mobility/budget/time constraints, and vague logistics.
+
+      User request:
+      ${input}
+
+      Expected constraints:
+      ${JSON.stringify(expectedOutput, null, 2)}
+
+      Itinerary:
+      ${outputText(output)}
+
+      Return JSON with:
+      - score: number from 0 to 1
+      - reasoning: one concise sentence explaining the score`;
+
   const result = await generateObject({
     model: MODEL,
     schema: z.object({
@@ -43,24 +58,7 @@ const feasibilityAndPacingEvaluator: Evaluator<
       reasoning: z.string(),
     }),
     schemaName: "FeasibilityAndPacingScore",
-    maxOutputTokens: 300,
-    prompt: `Score this itinerary from 0 to 1 for feasibility and pacing.
-
-Judge only whether the plan is realistic, appropriately paced, and respects the user's constraints.
-Penalize overpacked schedules, implausible routing, missed mobility/budget/time constraints, and vague logistics.
-
-User request:
-${input}
-
-Expected constraints:
-${JSON.stringify(expectedOutput, null, 2)}
-
-Itinerary:
-${outputText(output)}
-
-Return JSON with:
-- score: number from 0 to 1
-- reasoning: one concise sentence explaining the score`,
+    prompt,
   });
 
   return {
@@ -83,7 +81,7 @@ async function main() {
     const result = await (
       await dataset
     ).runExperiment({
-      name: EXPERIMENT_NAME,
+      name: "openhouse-itinerary-agent-demo",
       metadata: {
         app: "openhouse-demo",
         agentModel: MODEL,

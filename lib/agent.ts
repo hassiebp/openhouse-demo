@@ -2,6 +2,7 @@ import { ToolLoopAgent, type ModelMessage } from "ai";
 import { itineraryTools } from "./tools/itinerary-tools";
 
 export const MODEL = "openai/gpt-5.4-mini";
+// export const MODEL = "anthropic/claude-sonnet-4.5";
 
 const agent = new ToolLoopAgent({
   id: "itinerary-planner-orchestrator",
