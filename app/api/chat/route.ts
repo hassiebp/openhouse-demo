@@ -6,6 +6,7 @@ import {
   observe,
   propagateAttributes,
   setActiveTraceIO,
+  updateActiveObservation,
 } from "@langfuse/tracing";
 import { langfuseSpanProcessor } from "@/instrumentation";
 
@@ -26,6 +27,7 @@ async function handler(request: Request) {
   setActiveTraceIO({
     input: getLatestUserText(messages),
   });
+  updateActiveObservation({ input: getLatestUserText(messages) });
 
   return propagateAttributes(
     {
@@ -41,6 +43,7 @@ async function handler(request: Request) {
           setActiveTraceIO({
             output: event.text,
           });
+          updateActiveObservation({ output: event.text });
           trace.getActiveSpan()?.end();
         },
       );
@@ -57,4 +60,6 @@ async function handler(request: Request) {
 export const POST = observe(handler, {
   name: "OpenHouse-Itinerary-Agent",
   endOnExit: false,
+  captureInput: false,
+  captureOutput: false,
 });
