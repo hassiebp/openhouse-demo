@@ -3,7 +3,6 @@ import "dotenv/config";
 import {
   LangfuseClient,
   type Evaluator,
-  type ExperimentItem,
   type ExperimentTask,
 } from "@langfuse/client";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
@@ -20,44 +19,13 @@ type ItineraryExpectations = {
 
 const EXPERIMENT_NAME = "openhouse-itinerary-agent-demo";
 
-const data: ExperimentItem<string, ItineraryExpectations>[] = [
-  {
-    input:
-      "I am at a conference near Moscone Center in San Francisco. Give me an evening-only itinerary after 5pm with dinner and one memorable stop.",
-    expectedOutput: {
-      mustInclude: ["after 5pm", "dinner", "near Moscone Center"],
-      mustAvoid: ["full-day itinerary", "early morning plan"],
-    },
-  },
-  {
-    input:
-      "Plan a relaxed 2-day Tokyo itinerary for two first-time visitors who love food and want to avoid long transit hops.",
-    expectedOutput: {
-      mustInclude: ["food", "relaxed pacing", "short transit hops"],
-      mustAvoid: ["overloaded schedule", "cross-city backtracking"],
-    },
-  },
-  {
-    input:
-      "Create a 3-day Paris plan for my parents. They have limited mobility, prefer taxis or short walks, and want classic sights without feeling rushed.",
-    expectedOutput: {
-      mustInclude: [
-        "limited mobility",
-        "short walks or taxis",
-        "classic sights",
-      ],
-      mustAvoid: ["long walking route", "packed museum day"],
-    },
-  },
-];
-
 const itineraryTask: ExperimentTask<string, ItineraryExpectations> = async ({
   input,
 }) => {
   const result = await generateAgentResponse([
     {
       role: "user",
-      content: requireString(input),
+      content: input as string,
     },
   ]);
 
@@ -85,7 +53,7 @@ User request:
 ${input}
 
 Expected constraints:
-${JSON.stringify(requireExpectedOutput(expectedOutput), null, 2)}
+${JSON.stringify(expectedOutput, null, 2)}
 
 Itinerary:
 ${outputText(output)}
@@ -106,19 +74,20 @@ Return JSON with:
 };
 
 async function main() {
-  validateLangfuseEnv();
-
   const telemetry = registerExperimentTelemetry();
   const langfuse = new LangfuseClient();
 
+  const dataset = langfuse.dataset.get("itinerary-prompts");
+
   try {
-    const result = await langfuse.experiment.run({
+    const result = await (
+      await dataset
+    ).runExperiment({
       name: EXPERIMENT_NAME,
       metadata: {
         app: "openhouse-demo",
         agentModel: MODEL,
       },
-      data,
       task: itineraryTask,
       evaluators: [feasibilityAndPacingEvaluator],
     });
@@ -141,36 +110,6 @@ function registerExperimentTelemetry() {
   registerTelemetry(new LangfuseVercelAiSdkIntegration());
 
   return { tracerProvider };
-}
-
-function validateLangfuseEnv() {
-  const missing = ["LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY"].filter(
-    (name) => !process.env[name],
-  );
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Missing required Langfuse environment variables: ${missing.join(", ")}.`,
-    );
-  }
-}
-
-function requireString(input: unknown) {
-  if (typeof input !== "string" || input.trim().length === 0) {
-    throw new Error("Experiment item is missing a string input.");
-  }
-
-  return input;
-}
-
-function requireExpectedOutput(
-  expectedOutput: ItineraryExpectations | undefined,
-) {
-  if (!expectedOutput) {
-    throw new Error("Experiment item is missing expectedOutput.");
-  }
-
-  return expectedOutput;
 }
 
 function outputText(output: unknown) {
