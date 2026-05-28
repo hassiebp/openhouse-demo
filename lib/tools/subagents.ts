@@ -6,8 +6,9 @@ import type {
   DestinationResearchInput,
   LogisticsInput,
 } from "./types";
+import { openai } from "@ai-sdk/openai";
 
-const MODEL = "openai/gpt-5.4-mini";
+const MODEL = openai("gpt-5.4-mini");
 
 export async function researchDestination({
   destination,

@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "experiment:itinerary": "tsx scripts/run-itinerary-experiment.ts",
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "4.0.0-canary.65",
     "@ai-sdk/react": "4.0.0-canary.154",
+    "@langfuse/client": "5.4.0",
     "@langfuse/otel": "^5.4.0-beta.1",
     "@langfuse/tracing": "5.4.0-beta.1",
     "@langfuse/vercel-ai-sdk": "5.4.0-beta.1",
@@ -26,8 +29,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "tsx": "^4.22.3",
     "typescript": "^5"
   }
 }
